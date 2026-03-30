@@ -11,8 +11,8 @@
 
 #define W 640
 #define H 480
-#define FPS 30.0
-#define N 100
+#define FPS 60.0
+#define N (60 * 60)
 
 double get_wall_time() {
   struct timespec time;
@@ -151,9 +151,9 @@ int main(int argc, char **argv) {
 
   long compressed_size = get_file_size(argv[1]);
 
-  printf("real size       : %dB\n", H * W * 3);
-  printf("compressed size : %dB\n", compressed_size);
-  printf("statial ratio   : %.2f\n", (double) H * W * 3 / compressed_size);
+  printf("real size       : %ldB\n", (long)H * W * 3 * N);
+  printf("compressed size : %ldB\n", compressed_size);
+  printf("statial ratio   : %.2f\n", (double) H * W * 3 * N / compressed_size);
 
   return 0;
 }

@@ -11,8 +11,8 @@
 
 #define W 640
 #define H 480
-#define FPS 30.0
-#define N 100
+#define FPS 60.0
+#define N (60 * 60)
 
 double get_wall_time() {
   struct timespec time;
@@ -37,7 +37,7 @@ long get_file_size(const char *filename) {
 #define rnow get_wall_time()
 
 #define NCPU "4"
-#define CRF "31"
+#define CRF "23"
 #define PRESET "good"
 
 int main(int argc, char **argv) {
@@ -79,7 +79,6 @@ int main(int argc, char **argv) {
   codec_ctx->time_base = (AVRational){1, FPS}; 
   codec_ctx->framerate = (AVRational){FPS, 1}; 
   codec_ctx->pix_fmt = AV_PIX_FMT_YUV420P; 
-  codec_ctx->bit_rate = 0;
 
   AVDictionary *vpx_opts = NULL;
   av_dict_set(&vpx_opts, "cpu-used", NCPU, 0);
@@ -153,9 +152,9 @@ int main(int argc, char **argv) {
 
   long compressed_size = get_file_size(argv[1]);
 
-  printf("real size       : %dB\n", H * W * 3);
-  printf("compressed size : %dB\n", compressed_size);
-  printf("statial ratio   : %.2f\n", (double) H * W * 3 / compressed_size);
+  printf("real size       : %ldB\n", H * W * 3 * N);
+  printf("compressed size : %ldB\n", compressed_size);
+  printf("statial ratio   : %.2f\n", (double) H * W * 3 * N / compressed_size);
 
   return 0;
 }
