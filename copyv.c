@@ -2,10 +2,14 @@
 #include <stdlib.h>
 #include <libavformat/avformat.h>
 
+/*
+AVFormatContext
+*/
+
 int main(int argc, char **argv) {
 
   if (argc < 3) {
-    printf("./main {input} {output}\n");
+    printf("./copyv {input} {output}\n");
     return 1;
   }
 
@@ -14,6 +18,7 @@ int main(int argc, char **argv) {
 
   avformat_open_input(&ifmt_ctx, argv[1], NULL, NULL);
   avformat_find_stream_info(ifmt_ctx, NULL);
+
   avformat_alloc_output_context2(&ofmt_ctx, NULL, NULL, "output.mp4");
   AVStream *in_stream = ifmt_ctx->streams[0];
   AVStream *out_stream = avformat_new_stream(ofmt_ctx, NULL);
