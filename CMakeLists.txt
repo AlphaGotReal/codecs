@@ -7,7 +7,8 @@ pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavformat libavcodec libavut
 
 function(add_ff TARGET_NAME)
   add_executable(${TARGET_NAME} ${ARGN})
-  target_compile_options(${TARGET_NAME} PRIVATE -g)
+  target_compile_options(${TARGET_NAME} PRIVATE -g -fsanitize=address -fno-omit-frame-pointer)
+  target_link_options(${TARGET_NAME} PRIVATE -fsanitize=address)
   target_link_libraries(${TARGET_NAME} PkgConfig::FFMPEG)
 endfunction()
 
