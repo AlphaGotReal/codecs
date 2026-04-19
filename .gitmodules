@@ -1,0 +1,3 @@
+[submodule "encoders/dinov3"]
+	path = encoders/dinov3
+	url = https://github.com/facebookresearch/dinov3.git
