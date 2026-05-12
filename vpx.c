@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
+#include <string.h>
 
 #include <libavformat/avformat.h>
 #include <libavcodec/avcodec.h>
@@ -131,16 +132,18 @@ int main(int argc, char **argv) {
   AVPacket *pkt = NULL;
 
   AVOutputFormat *fmt = av_guess_format(NULL, out_filename, NULL);
-  if (!fmt) {
-    fmt = av_guess_format("matroska", NULL, NULL);
+  if (strcmp(codec_name, "libvpx") == 0 || strcmp(codec_name, "libvpx-vp9") == 0) {
+    if (fmt && strcmp(fmt->name, "mp4") == 0) {
+      fmt = av_guess_format("matroska", NULL, NULL);
+    }
   }
   avformat_alloc_output_context2(&ofmt_ctx, fmt, NULL, NULL);
 
   const AVCodec *enc_codec = avcodec_find_encoder_by_name(codec_name);
   if (!enc_codec) {
-      fprintf(stderr, "Fatal: Could not find encoder '%s'.\n", codec_name);
-      fprintf(stderr, "Did you compile FFmpeg with this encoder enabled?\n");
-      return 1;
+    fprintf(stderr, "Fatal: Could not find encoder '%s'.\n", codec_name);
+    fprintf(stderr, "Did you compile FFmpeg with this encoder enabled?\n");
+    return 1;
   }
 
   AVStream *out_stream = avformat_new_stream(ofmt_ctx, enc_codec);
