@@ -34,7 +34,7 @@ long get_file_size(const char *filename) {
 #define rnow get_wall_time()
 
 #define PRESET "8"
-#define CRF "35"
+#define CRF "20"
 
 int main(int argc, char **argv) {
 
@@ -49,7 +49,7 @@ int main(int argc, char **argv) {
   const char *in_filename = argv[1];
   const char *out_filename = argv[2];
 
-  char *codec_name = "av1_qsv";
+  char *codec_name = "h264_qsv";
   if (argc >= 4) {
     codec_name = argv[3];
   }
