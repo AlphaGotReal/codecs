@@ -17,3 +17,5 @@ add_ff(vpx src/vpx.c)
 add_ff(av1 src/av1.c)
 add_ff(h264_nvenv src/h264_nvenc.c)
 add_ff(av1_nvenv src/av1_nvenc.c)
+
+add_ff(comp comp.c)
