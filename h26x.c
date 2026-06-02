@@ -215,7 +215,7 @@ int main(int argc, char **argv) {
   avcodec_free_context(&dec_ctx);
   avformat_close_input(&ifmt_ctx);
 
-avcodec_send_frame(codec_ctx, NULL);
+  avcodec_send_frame(codec_ctx, NULL);
   while (avcodec_receive_packet(codec_ctx, pkt) == 0) {
     av_packet_rescale_ts(pkt, codec_ctx->time_base, out_stream->time_base);
     pkt->stream_index = out_stream->index;
