@@ -1,0 +1,87 @@
+<h2>Hash Functions</h2> 
+<p>
+A comprehensive collection of hash functions, a hash visualiser and some test
+results [see Mckenzie et al. <em>Selecting a Hashing Algorithm</em>, SP&E
+20(2):209-224, Feb 1990] will be available someday. If you just want to
+have a good hash function, and cannot wait, <tt>djb2</tt> is one of the best
+string hash functions i know. it has excellent distribution and speed on many
+different sets of keys and table sizes. you are not likely to do better with
+one of the "well known" functions such as PJW, K&R[1], etc.
+Also see <a href="http://cm.bell-labs.com/cm/cs/tpop">tpop</a> pp. 126 for
+graphing hash functions.
+<p>
+<hr>
+<h3><a name="djb2">djb2</a></h3>
+this algorithm (k=33) was first reported by dan bernstein many years
+ago in comp.lang.c. another version of this algorithm (now favored
+by bernstein) uses xor: <tt>hash(i) = hash(i - 1) * 33 ^ str[i];</tt>
+the magic of number 33 (why it works better than many other
+constants, prime or not) has never been adequately explained.
+<pre>
+    unsigned long
+    hash(unsigned char *str)
+    {
+        unsigned long hash = 5381;
+        int c;
+
+        while (c = *str++)
+            hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+
+        return hash;
+    }
+</pre>
+<p>
+<hr>
+<h3><a name="sdbm">sdbm</a></h3>
+
+this algorithm was created for sdbm (a public-domain reimplementation of ndbm)
+database library.  it was found to do well in scrambling bits, causing better
+distribution of the keys and fewer splits.  it also happens to be a good
+general hashing function with good distribution. the actual function is
+<tt>hash(i) = hash(i - 1) * 65599 + str[i];</tt> what is included below is the
+faster version used in gawk. [there is even a faster, duff-device version] the
+magic prime constant 65599 (2^6 + 2^16 - 1) was picked out of thin air while experimenting with many
+different constants. this is one of the
+algorithms used in berkeley db (see
+<ahref="http://www.sleepycat.com">sleepycat</a>) and elsewhere.
+
+<pre>
+    static unsigned long
+    sdbm(str)
+    unsigned char *str;
+    {
+        unsigned long hash = 0;
+        int c;
+
+        while (c = *str++)
+            hash = c + (hash << 6) + (hash << 16) - hash;
+
+        return hash;
+    }
+</pre>
+<p>
+<hr>
+<h3><a name="k&r1">lose lose</a></h3>
+This hash function appeared in K&R (1st ed) but at least the reader was
+warned: "<em>This is not the best possible algorithm, but it has the merit of
+extreme simplicity</em>." This is an understatement; It is a <em>terrible</em>
+hashing algorithm, and it could have been much better without sacrificing its
+simplicity. [see the second edition!] Many C programmers used to
+use this function without actually testing it, or checking something like
+Knuth's <em>Sorting and Searching</em>, so it got around. It used to show up mixed in
+with otherwise respectable code, eg. cnews. sigh.]
+<pre>
+    unsigned long
+    hash(unsigned char *str)
+    {
+	unsigned int hash = 0;
+	int c;
+
+	while (c = *str++)
+	    hash += c;
+
+	return hash;
+    }
+</pre>
+<p>
+<hr>
