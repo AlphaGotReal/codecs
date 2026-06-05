@@ -3,8 +3,6 @@
 
 #include <stdbool.h>
 
-#include "common.h"
-
 typedef struct opts opts_t;
 
 struct opts {
