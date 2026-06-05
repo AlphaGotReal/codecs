@@ -1,0 +1,38 @@
+### required fields ###
+
+lib: "libx264"
+fps: 30.0
+in_fmt: "RGB24"
+out_fmt: "YUV420P"
+
+### generic fields ###
+
+# # bitrate and rate control 
+# b: "4M"                   # bit_rate
+# minrate: "2M"             # rc_min_rate
+# maxrate: "6M"             # rc_max_rate
+# bufsize: "12M"            # rc_buffer_size
+# rc_init_occupancy: "10M"  # rc_initial_buffer
+# 
+# # frame structure and keyframes 
+# g: "60"                   # gop_size 
+# keyint_min: "30"          # keyint_min
+# bf: "3"                   # max_b_frames
+# refs: "4"                 # refs
+# b_strategy: "1"           # b_frame_strategy
+# 
+# # quality and quantization
+# qmin: "10"                # qmin
+# qmax: "51"                # qmax
+# qscale: "-1"              # global_quality
+# trellis: "1"              # trellis
+# profile: "high"           # profile
+# level: "41"               # level
+# 
+# # performance and system (software encoders only)
+# threads: "0"              # thread_count
+# thread_type: "frame"      # thread_type
+# strict: "normal"          # strict_std_compliance
+# flags: "+global_header"   # flags
+
+### encoder specific fields ###
