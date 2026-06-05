@@ -14,8 +14,8 @@ struct decoder {
   int64_t  duration;
   uint64_t frames;
 
-  int      width;
-  int      height;
+  uint32_t width;
+  uint32_t height;
 
   size_t   _vidx;
   bool     _exhausted;
