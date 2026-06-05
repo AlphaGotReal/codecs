@@ -28,8 +28,8 @@ struct decoder {
   AVFrame           *frame;
   AVPacket          *pkt;
 
-  bool (*end)(decoder_t *);
-  bool (*close)(decoder_t *);
+  bool     (*end)(decoder_t *);
+  bool     (*close)(decoder_t *);
   uint8_t *(*next)(decoder_t *);
 };
 
