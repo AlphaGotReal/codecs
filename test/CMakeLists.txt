@@ -1,4 +1,3 @@
-pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavformat libavcodec libavutil)
 
 function(add_ff TARGET_NAME)
   add_executable(${TARGET_NAME} ${ARGN})
