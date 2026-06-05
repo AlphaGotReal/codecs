@@ -28,7 +28,7 @@ void free_kv(kv_t *r) {
 
 static bool mpush(umap_t *this, kv_t *r) {
   if (r == NULL) {
-    fprintf("cannot push NULL\n");
+    fprintf(stderr, "cannot push NULL\n");
     return false;
   }
 
@@ -49,12 +49,13 @@ static char *mfind(umap_t *this, const char *k) {
   uint64_t idx = (this->hash(k)) % (this->size);
 
   for (kv_t *r = this->table[idx]; r != NULL; r = r->next) {
-    if (stdcmp(r->k, k) == 0) {
-      char *v = strdup(k->v);
+    if (strcmp(r->k, k) == 0) {
+      char *v = strdup(r->v);
       if (v == NULL) {
         fprintf(stderr, "memory allocation failed\n");
         return NULL;
-      }return v;
+      }
+      return v;
     }
   }
 
@@ -72,18 +73,30 @@ umap_t *new_umap(
   }
 
   mp->size  = size;
-  mp->table = (kv_t **) malloc(sizeof(kv_t *) * size);
+  mp->table = (kv_t **) malloc(size * sizeof(kv_t *));
   
   if (mp->table == NULL) {
     fprintf(stderr, "failed to malloc umap_t table\n");
     return NULL;
   }
 
+  for (uint64_t i = 0; i < size; i++)
+    mp->table[i] = NULL;
+
   mp->push = mpush;
   mp->find = mfind;
   mp->hash = mhash;
 
   return mp;
+}
+
+void free_umap(umap_t *mp) {
+  if (mp == NULL) return;
+  for (uint64_t i = 0; i < mp->size; i++)
+    if (mp->table[i] != NULL)
+      free_kv(mp->table[i]);
+  free(mp->table);
+  free(mp);
 }
 
 /* hash functions for string
@@ -100,7 +113,7 @@ uint64_t djb2(const uint8_t *str) {
   return hash;
 }
 
-uint64_t sdmb(const uint8_t *str) {
+uint64_t sdbm(const uint8_t *str) {
   uint64_t hash = 0;
   uint8_t c;
   
