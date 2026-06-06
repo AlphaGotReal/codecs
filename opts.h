@@ -2,14 +2,19 @@
 #define OPTS_H
 
 #include <stdbool.h>
+#include <stdint.h>
 
 typedef struct opts opts_t;
 
 struct opts {
+
   char *lib;
   double fps;
   char *in_fmt;
   char *out_fmt;
+
+  uint32_t height;
+  uint32_t width;
 
   /* variable options */
   size_t n;

@@ -20,10 +20,12 @@ void free_opts(opts_t *opts) {
 }
 
 static int is_known(const char *k) {
-  return strcmp(k, "lib")    == 0 ||
-         strcmp(k, "fps")    == 0 ||
-         strcmp(k, "in_fmt") == 0 ||
-         strcmp(k, "out_fmt") == 0;
+  return strcmp(k, "lib")     == 0 ||
+         strcmp(k, "fps")     == 0 ||
+         strcmp(k, "in_fmt")  == 0 ||
+         strcmp(k, "out_fmt") == 0 ||
+         strcmp(k, "height")  == 0 ||
+         strcmp(k, "width")   == 0;
 }
 
 static int count_unknown(const char *fname, size_t *n) {
@@ -130,6 +132,10 @@ opts_t *new_opts(const char *fname) {
           } else if (strcmp(key, "out_fmt") == 0) {
             opts->out_fmt = strdup(val);
             if (opts->out_fmt == NULL) { free(key); goto fail; }
+          } else if (strcmp(key, "height") == 0) {
+            opts->height = (uint32_t)strtoul(val, NULL, 10);
+          } else if (strcmp(key, "width") == 0) {
+            opts->width = (uint32_t)strtoul(val, NULL, 10);
           } else {
             opts->K[idx] = strdup(key);
             opts->V[idx] = strdup(val);

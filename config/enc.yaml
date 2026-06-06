@@ -4,6 +4,8 @@ lib: "libx264"
 fps: 30.0
 in_fmt: "RGB24"
 out_fmt: "YUV420P"
+height: 1080
+width: 1920
 
 ### generic fields ###
 
