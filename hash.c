@@ -58,8 +58,8 @@ static void *mfind(umap_t *this, const char *k) {
 }
 
 umap_t *new_umap(
-  uint64_t size, 
-  uint64_t (*mhash)(const uint8_t *)) {
+    uint64_t size, 
+    uint64_t (*mhash)(const uint8_t *)) {
 
   umap_t *mp = (umap_t *) malloc(sizeof(umap_t));
   if (mp == NULL) {
