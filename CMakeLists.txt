@@ -17,4 +17,8 @@ add_library(decoder STATIC decoder.c)
 target_include_directories(decoder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(decoder PUBLIC PkgConfig::FFMPEG)
 
+add_library(encoder STATIC encoder.c)
+target_include_directories(encoder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(encoder PUBLIC PkgConfig::FFMPEG hash opts)
+
 add_subdirectory(test)
