@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(debug-codecs C)
+project(codecs C)
 
 find_package(PkgConfig REQUIRED)
 

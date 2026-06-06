@@ -1,4 +1,4 @@
-# debug-codecs
+# codecs
 
 ```bash
 sudo apt install libyaml-dev
