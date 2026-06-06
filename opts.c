@@ -8,8 +8,7 @@
 void free_opts(opts_t *opts) {
   if (opts == NULL) return;
   free(opts->lib);
-  free(opts->in_fmt);
-  free(opts->out_fmt);
+  free(opts->fmt);
   for (size_t i = 0; i < opts->n; i++) {
     free(opts->K[i]);
     free(opts->V[i]);
