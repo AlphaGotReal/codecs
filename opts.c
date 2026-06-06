@@ -22,8 +22,7 @@ void free_opts(opts_t *opts) {
 static int is_known(const char *k) {
   return strcmp(k, "lib")     == 0 ||
          strcmp(k, "fps")     == 0 ||
-         strcmp(k, "in_fmt")  == 0 ||
-         strcmp(k, "out_fmt") == 0 ||
+         strcmp(k, "fmt") == 0 ||
          strcmp(k, "height")  == 0 ||
          strcmp(k, "width")   == 0;
 }
@@ -50,7 +49,7 @@ static int count_unknown(const char *fname, size_t *n) {
       case YAML_MAPPING_END_EVENT:   state = 0; break;
       case YAML_SCALAR_EVENT:
         if (state == 1) {
-          key = strdup((const char *)e.data.scalar.value);
+          key = strdup((const char *) e.data.scalar.value);
           state = 2;
         } else if (state == 2) {
           if (key && !is_known(key)) (*n)++;
@@ -115,7 +114,7 @@ opts_t *new_opts(const char *fname) {
       case YAML_MAPPING_START_EVENT: state = 1; break;
       case YAML_MAPPING_END_EVENT:   state = 0; break;
       case YAML_SCALAR_EVENT: {
-        const char *val = (const char *)e.data.scalar.value;
+        const char *val = (const char *) e.data.scalar.value;
         if (state == 1) {
           key = strdup(val);
           if (key == NULL) goto fail;
@@ -126,16 +125,13 @@ opts_t *new_opts(const char *fname) {
             if (opts->lib == NULL) { free(key); goto fail; }
           } else if (strcmp(key, "fps") == 0) {
             opts->fps = strtod(val, NULL);
-          } else if (strcmp(key, "in_fmt") == 0) {
-            opts->in_fmt = strdup(val);
-            if (opts->in_fmt == NULL) { free(key); goto fail; }
-          } else if (strcmp(key, "out_fmt") == 0) {
-            opts->out_fmt = strdup(val);
-            if (opts->out_fmt == NULL) { free(key); goto fail; }
+          } else if (strcmp(key, "fmt") == 0) {
+            opts->fmt = strdup(val);
+            if (opts->fmt == NULL) { free(key); goto fail; }
           } else if (strcmp(key, "height") == 0) {
-            opts->height = (uint32_t)strtoul(val, NULL, 10);
+            opts->height = (uint32_t) strtoul(val, NULL, 10);
           } else if (strcmp(key, "width") == 0) {
-            opts->width = (uint32_t)strtoul(val, NULL, 10);
+            opts->width = (uint32_t) strtoul(val, NULL, 10);
           } else {
             opts->K[idx] = strdup(key);
             opts->V[idx] = strdup(val);

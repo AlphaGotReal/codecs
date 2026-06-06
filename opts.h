@@ -10,8 +10,7 @@ struct opts {
 
   char *lib;
   double fps;
-  char *in_fmt;
-  char *out_fmt;
+  char *fmt;
 
   uint32_t height;
   uint32_t width;
