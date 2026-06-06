@@ -27,6 +27,7 @@ long get_file_size(const char *filename) {
   return size;
 }
 
-#define call(this, F, ...) (this)->F((this), ##__VA_ARGS__)
+#define non_static_call(this, F, ...) (this)->F((this), ##__VA_ARGS__)
+#define static_call(this, F, ...) (this)->F(##__VA_ARGS__)
 
 #endif
