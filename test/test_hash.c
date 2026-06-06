@@ -88,7 +88,6 @@ static int test_push_find(void) {
   mp->push(mp, new_kv(strdup("name"), strdup("alice")));
   char *v = mp->find(mp, "name");
   int ok = (v != NULL && strcmp(v, "alice") == 0);
-  free(v);
   free_umap(mp);
   return ok ? 0 : 1;
 }
@@ -110,8 +109,6 @@ static int test_collision(void) {
   char *v2 = mp->find(mp, "ba");
   int ok = (v1 && strcmp(v1, "first") == 0 &&
             v2 && strcmp(v2, "second") == 0);
-  free(v1);
-  free(v2);
   free_umap(mp);
   return ok ? 0 : 1;
 }
@@ -143,7 +140,6 @@ static int test_multiple_entries(void) {
   for (int i = 0; i < n; i++) {
     char *v = mp->find(mp, keys[i]);
     if (v == NULL || strcmp(v, vals[i]) != 0) ok = 0;
-    free(v);
   }
 
   free_umap(mp);

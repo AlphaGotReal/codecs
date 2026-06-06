@@ -4,7 +4,7 @@
 
 #include "hash.h"
 
-kv_t *new_kv(char *k, char *v) {
+kv_t *new_kv(char *k, void *v) {
   kv_t *r = (kv_t *) malloc(sizeof(kv_t));
   if (r == NULL) {
     fprintf(stderr, "failed to malloc kv_t\n");
@@ -40,7 +40,7 @@ static bool mpush(umap_t *this, kv_t *r) {
   return true;
 }
 
-static char *mfind(umap_t *this, const char *k) {
+static void *mfind(umap_t *this, const char *k) {
   if (k == NULL) {
     fprintf(stderr, "cannot find NULL\n");
     return NULL;
@@ -50,12 +50,7 @@ static char *mfind(umap_t *this, const char *k) {
 
   for (kv_t *r = this->table[idx]; r != NULL; r = r->next) {
     if (strcmp(r->k, k) == 0) {
-      char *v = strdup(r->v);
-      if (v == NULL) {
-        fprintf(stderr, "memory allocation failed\n");
-        return NULL;
-      }
-      return v;
+      return r->v;
     }
   }
 

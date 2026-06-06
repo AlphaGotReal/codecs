@@ -9,13 +9,13 @@ typedef struct umap umap_t;
 
 struct kv {
   char *k;
-  char *v;
+  void *v;
   kv_t *next;
 };
 
 kv_t *new_kv(
   char * /* k */, 
-  char * /* v */);
+  void * /* v */);
 
 /* if called on a head,
    frees the entire chain */
@@ -27,7 +27,7 @@ struct umap {
 
   /* non static methods */
   bool     (*push)(umap_t *, kv_t *);
-  char    *(*find)(umap_t *, const char *);
+  void    *(*find)(umap_t *, const char *);
 
   /* static methods */
   uint64_t (*hash)(const uint8_t *);
