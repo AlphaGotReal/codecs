@@ -51,12 +51,12 @@ have_frame:
   {
     int buf_size = av_image_get_buffer_size(
         it->dec_ctx->pix_fmt, it->width, it->height, 1);
-    uint8_t *buf = (uint8_t *)malloc(buf_size);
+    uint8_t *buf = (uint8_t *) malloc(buf_size);
     if (buf == NULL) return NULL;
 
     av_image_copy_to_buffer(buf, buf_size,
-        (const uint8_t **)it->frame->data,
-        (const int *)it->frame->linesize,
+        (const uint8_t **) it->frame->data,
+        (const int *) it->frame->linesize,
         it->dec_ctx->pix_fmt, it->width, it->height, 1);
     return buf;
   }
@@ -87,7 +87,7 @@ decoder_t *new_decoder(const char *fname) {
   int vidx = -1;
   for (unsigned int i = 0; i < fmt_ctx->nb_streams; i++) {
     if (fmt_ctx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
-      vidx = (int)i;
+      vidx = (int) i;
       break;
     }
   }
@@ -151,7 +151,7 @@ decoder_t *new_decoder(const char *fname) {
 
   int64_t dur = stream->duration;
   if (dur <= 0) dur = fmt_ctx->duration;
-  uint64_t nframes = (uint64_t)(av_q2d(stream->time_base) * dur * fps);
+  uint64_t nframes = (uint64_t) (av_q2d(stream->time_base) * dur * fps);
   if (nframes <= 0) nframes = 300;
 
   it->fps      = fps;
@@ -159,7 +159,7 @@ decoder_t *new_decoder(const char *fname) {
   it->frames   = nframes;
   it->width    = cparams->width;
   it->height   = cparams->height;
-  it->_vidx    = (size_t)vidx;
+  it->_vidx    = (size_t) vidx;
 
   it->fmt_ctx  = fmt_ctx;
   it->stream   = stream;
