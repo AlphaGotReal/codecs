@@ -9,8 +9,8 @@ double get_wall_time() {
   return (double) time.tv_sec + (double) time.tv_nsec * 1e-9;
 }
 
-#define cnow (clock() * 1e-6)
-#define rnow get_wall_time()
+#define cnow ((double) clock() / CLOCKS_PER_SEC) // return CPU time in s
+#define rnow get_wall_time()                     // return uptime in s
 
 #include <unistd.h>
 
