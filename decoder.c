@@ -216,7 +216,7 @@ decoder_t *new_decoder(const char *fname, const char *fmt) {
 
   if (fmt != NULL) {
     init_pixfmt();
-    void *f = non_static_call(pixfmt, find, fmt);
+    void *f = pixfmt->find(pixfmt, fmt);
     if (f != NULL) {
       it->target_fmt = (enum AVPixelFormat)(intptr_t)f;
       if (it->target_fmt != dec_ctx->pix_fmt) {
@@ -254,5 +254,6 @@ void free_decoder(decoder_t *it) {
   if (it == NULL) return;
   if (it->close) it->close(it);
   free(it->fname);
+  free_pixfmt();
   free(it);
 }

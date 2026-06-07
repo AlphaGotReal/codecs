@@ -13,12 +13,16 @@ add_library(opts STATIC opts.c)
 target_include_directories(opts PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(opts PUBLIC PkgConfig::YAML)
 
+add_library(pixfmt STATIC pixfmt.c)
+target_include_directories(pixfmt PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(pixfmt PUBLIC hash)
+
 add_library(decoder STATIC decoder.c)
 target_include_directories(decoder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(decoder PUBLIC PkgConfig::FFMPEG)
+target_link_libraries(decoder PUBLIC PkgConfig::FFMPEG pixfmt)
 
 add_library(encoder STATIC encoder.c)
 target_include_directories(encoder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(encoder PUBLIC PkgConfig::FFMPEG hash opts)
+target_link_libraries(encoder PUBLIC PkgConfig::FFMPEG hash opts pixfmt)
 
 add_subdirectory(test)

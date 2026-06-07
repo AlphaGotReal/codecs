@@ -164,5 +164,6 @@ encoder_t *new_encoder(
 void free_encoder(encoder_t *enc) {
   if (enc == NULL) return;
   if (enc->close) enc->close(enc);
+  free_pixfmt();
   free(enc);
 }
