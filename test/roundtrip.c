@@ -21,8 +21,8 @@ int main(int argc, char **argv) {
   dopts->fmt = strdup("yuv420p");
 
   decoder_t *in_dec = new_decoder(in_fname, dopts);
-  free_decopts(dopts);
   if (!in_dec) {
+    free_decopts(dopts);
     fprintf(stderr, "FAIL: could not open decoder for '%s'\n", in_fname);
     return 1;
   }

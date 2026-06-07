@@ -29,21 +29,28 @@ static Uint32 lookup_fmt(const char *fmt, int W, int *pitch) {
 
 int main(int argc, char **argv) {
   if (argc < 2 || argc > 3) {
-    fprintf(stderr, "Usage: %s <video_file> [pixel_format]\n", argv[0]);
+    fprintf(stderr, "Usage: %s <video_file> [dec_config.yaml]\n", argv[0]);
     return 1;
   }
 
   const char *fname = argv[1];
-  const char *fmt   = argc >= 3 ? argv[2] : "rgb8";
+  const char *cfg   = argc >= 3 ? argv[2] : NULL;
 
-  decopts_t *dopts = malloc(sizeof(decopts_t));
-  memset(dopts, 0, sizeof(decopts_t));
-  dopts->fmt = strdup(fmt);
+  decopts_t *dopts = cfg ? new_decopts(cfg) : malloc(sizeof(decopts_t));
+  if (dopts == NULL) {
+    fprintf(stderr, "could not create decoder opts\n");
+    return 1;
+  }
+  if (cfg == NULL) {
+    memset(dopts, 0, sizeof(decopts_t));
+    dopts->fmt = strdup("rgb8");
+  }
+  char *saved_fmt = strdup(dopts->fmt ? dopts->fmt : "rgb8");
 
   decoder_t *dec = new_decoder(fname, dopts);
-  free_decopts(dopts);
   if (!dec) {
     fprintf(stderr, "could not open decoder for '%s'\n", fname);
+    free(saved_fmt);
     return 1;
   }
 
@@ -52,7 +59,7 @@ int main(int argc, char **argv) {
   double fps = dec->fps;
   int delay = fps > 0.0 ? (int) (1000.0 / fps) : 33;
   int pitch;
-  Uint32 sdl_fmt = lookup_fmt(fmt, W, &pitch);
+  Uint32 sdl_fmt = lookup_fmt(saved_fmt, W, &pitch);
 
   signal(SIGINT, handle_sigint);
 
@@ -67,6 +74,7 @@ int main(int argc, char **argv) {
 
   SDL_Texture *tex = SDL_CreateTexture(ren, sdl_fmt,
       SDL_TEXTUREACCESS_STREAMING, W, H);
+  free(saved_fmt);
 
   while (running) {
     uint32_t tick = SDL_GetTicks();
@@ -85,11 +93,13 @@ int main(int argc, char **argv) {
     uint8_t *buf = dec->next(dec);
     if (!buf) {
       free_decoder(dec);
-      dopts = malloc(sizeof(decopts_t));
-      memset(dopts, 0, sizeof(decopts_t));
-      dopts->fmt = strdup(fmt);
+      dopts = cfg ? new_decopts(cfg) : malloc(sizeof(decopts_t));
+      if (dopts == NULL) break;
+      if (cfg == NULL) {
+        memset(dopts, 0, sizeof(decopts_t));
+        dopts->fmt = strdup("rgb8");
+      }
       dec = new_decoder(fname, dopts);
-      free_decopts(dopts);
       if (!dec) {
         fprintf(stderr, "could not reopen decoder\n");
         break;

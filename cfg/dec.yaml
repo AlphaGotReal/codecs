@@ -1,0 +1,8 @@
+fmt: "rgb8"                  # pixel format (default: "rgb8")
+
+# threads: 0                  # 0 = auto-detect
+# thread_type: "auto"         # "frame", "slice", or "auto"
+# skip_loop_filter: "default" # "none" / "default" / "nonref" / "bidir" / "nonkey" / "all"
+# err_detect: "crccheck"      # single or "crccheck+explode" combined
+# error_concealment: "guess_mvs+deblock"  # single or combined
+# nobuffer: false             # true to set AVFMT_FLAG_NOBUFFER
