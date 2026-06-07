@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #include "encoder.h"
 #include "decoder.h"
@@ -17,7 +16,12 @@ int main(int argc, char **argv) {
   const char *out_fname = argv[2];
   const char *cfg_fname = argv[3];
 
-  decoder_t *in_dec = new_decoder(in_fname, "yuv420p");
+  decopts_t *dopts = malloc(sizeof(decopts_t));
+  memset(dopts, 0, sizeof(decopts_t));
+  dopts->fmt = strdup("yuv420p");
+
+  decoder_t *in_dec = new_decoder(in_fname, dopts);
+  free_decopts(dopts);
   if (!in_dec) {
     fprintf(stderr, "FAIL: could not open decoder for '%s'\n", in_fname);
     return 1;
@@ -29,7 +33,7 @@ int main(int argc, char **argv) {
   printf("input: %s (%ux%u, %.2f fps, %lu frames)\n",
          in_fname, W, H, in_dec->fps, (unsigned long)in_dec->frames);
 
-  opts_t *opts = new_opts(cfg_fname);
+  encopts_t *opts = new_encopts(cfg_fname);
   if (!opts) {
     fprintf(stderr, "FAIL: could not load config '%s'\n", cfg_fname);
     free_decoder(in_dec);
@@ -42,7 +46,7 @@ int main(int argc, char **argv) {
   encoder_t *enc = new_encoder(out_fname, opts);
   if (!enc) {
     fprintf(stderr, "FAIL: could not create encoder\n");
-    free_opts(opts);
+    free_encopts(opts);
     free_decoder(in_dec);
     return 1;
   }
@@ -62,7 +66,7 @@ int main(int argc, char **argv) {
       fprintf(stderr, "FAIL: encode frame %lu\n", (unsigned long)total_enc);
       free(buf);
       free_encoder(enc);
-      free_opts(opts);
+      free_encopts(opts);
       free_decoder(in_dec);
       return 1;
     }
@@ -71,7 +75,7 @@ int main(int argc, char **argv) {
   }
   free_decoder(in_dec);
   free_encoder(enc);
-  free_opts(opts);
+  free_encopts(opts);
 
   if (total_enc == 0) {
     fprintf(stderr, "FAIL: no frames decoded\n");

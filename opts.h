@@ -4,10 +4,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct opts opts_t;
+typedef struct encopts encopts_t;
 
-struct opts {
-
+struct encopts {
   char *lib;
   double fps;
   char *fmt;
@@ -15,15 +14,27 @@ struct opts {
   uint32_t height;
   uint32_t width;
 
-  /* variable options */
   size_t n;
-  char **K; 
-  char **V; 
+  char **K;
+  char **V;
 };
 
-opts_t *new_opts(
-  const char * /* fname */);
+encopts_t *new_encopts(const char *fname);
+void free_encopts(encopts_t *opts);
 
-void free_opts(opts_t * /* opts */);
+typedef struct decopts decopts_t;
+
+struct decopts {
+  char  *fmt;
+  int    threads;
+  char  *thread_type;
+  char  *skip_loop_filter;
+  char  *err_detect;
+  char  *error_concealment;
+  bool   nobuffer;
+};
+
+decopts_t *new_decopts(const char *fname);
+void free_decopts(decopts_t *d);
 
 #endif

@@ -3,10 +3,12 @@
 #include <string.h>
 
 #include <libavutil/imgutils.h>
+#include <libavutil/dict.h>
 #include <libswscale/swscale.h>
 
 #include "decoder.h"
 #include "pixfmt.h"
+#include "flagmap.h"
 
 static bool dend(decoder_t *it) {
   return it->_exhausted;
@@ -54,7 +56,7 @@ static uint8_t *dnext(decoder_t *it) {
   it->_exhausted = true;
   return NULL;
 
-eof: 
+eof:
   it->_exhausted = true;
   return NULL;
 
@@ -108,7 +110,7 @@ have_frame:
   }
 }
 
-decoder_t *new_decoder(const char *fname, const char *fmt) {
+decoder_t *new_decoder(const char *fname, decopts_t *dopts) {
   decoder_t *it = (decoder_t *)malloc(sizeof(decoder_t));
   if (it == NULL) return NULL;
   memset(it, 0, sizeof(decoder_t));
@@ -122,6 +124,9 @@ decoder_t *new_decoder(const char *fname, const char *fmt) {
     free(it->fname); free(it);
     return NULL;
   }
+
+  if (dopts && dopts->nobuffer)
+    fmt_ctx->flags |= AVFMT_FLAG_NOBUFFER;
 
   if (avformat_find_stream_info(fmt_ctx, NULL) < 0) {
     fprintf(stderr, "could not find stream info\n");
@@ -166,13 +171,54 @@ decoder_t *new_decoder(const char *fname, const char *fmt) {
 
   avcodec_parameters_to_context(dec_ctx, cparams);
 
-  if (avcodec_open2(dec_ctx, codec, NULL) < 0) {
+  AVDictionary *dict = NULL;
+  if (dopts) {
+    if (dopts->threads > 0) {
+      char buf[16];
+      snprintf(buf, sizeof(buf), "%d", dopts->threads);
+      av_dict_set(&dict, "threads", buf, 0);
+    }
+    if (dopts->thread_type) {
+      int tt = parse_thrd(dopts->thread_type);
+      if (tt > 0) {
+        char buf[16];
+        snprintf(buf, sizeof(buf), "%d", tt);
+        av_dict_set(&dict, "thread_type", buf, 0);
+      }
+    }
+    if (dopts->skip_loop_filter) {
+      int slf = parse_skip(dopts->skip_loop_filter);
+      char buf[16];
+      snprintf(buf, sizeof(buf), "%d", slf);
+      av_dict_set(&dict, "skip_loop_filter", buf, 0);
+    }
+    if (dopts->err_detect) {
+      int ed = parse_err(dopts->err_detect);
+      if (ed) {
+        char buf[32];
+        snprintf(buf, sizeof(buf), "%d", ed);
+        av_dict_set(&dict, "err_recognition", buf, 0);
+      }
+    }
+    if (dopts->error_concealment) {
+      int ec = parse_ec(dopts->error_concealment);
+      if (ec) {
+        char buf[16];
+        snprintf(buf, sizeof(buf), "%d", ec);
+        av_dict_set(&dict, "error_concealment", buf, 0);
+      }
+    }
+  }
+
+  if (avcodec_open2(dec_ctx, codec, &dict) < 0) {
     fprintf(stderr, "could not open decoder\n");
+    av_dict_free(&dict);
     avcodec_free_context(&dec_ctx);
     avformat_close_input(&fmt_ctx);
     free(it->fname); free(it);
     return NULL;
   }
+  av_dict_free(&dict);
 
   AVFrame *frame = av_frame_alloc();
   if (frame == NULL) {
@@ -214,9 +260,9 @@ decoder_t *new_decoder(const char *fname, const char *fmt) {
   it->_vidx    = (size_t) vidx;
   it->target_fmt = AV_PIX_FMT_NONE;
 
-  if (fmt != NULL) {
+  if (dopts && dopts->fmt) {
     init_pixfmt();
-    void *f = pixfmt->find(pixfmt, fmt);
+    void *f = pixfmt->find(pixfmt, dopts->fmt);
     if (f != NULL) {
       it->target_fmt = *(enum AVPixelFormat *)f;
       if (it->target_fmt != dec_ctx->pix_fmt) {
@@ -242,6 +288,7 @@ decoder_t *new_decoder(const char *fname, const char *fmt) {
   it->dec_ctx  = dec_ctx;
   it->frame    = frame;
   it->pkt      = pkt;
+  it->dopts    = dopts;
 
   it->end   = dend;
   it->close = dclose;
@@ -255,5 +302,6 @@ void free_decoder(decoder_t *it) {
   if (it->close) it->close(it);
   free(it->fname);
   free_pixfmt();
+  free_decopts(it->dopts);
   free(it);
 }

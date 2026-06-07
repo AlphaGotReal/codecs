@@ -13,7 +13,7 @@ typedef struct encoder encoder_t;
 
 struct encoder {
   const char *fname;
-  opts_t *opt;
+  encopts_t *opt;
 
   /* private members */
   AVFormatContext *fmt_ctx;
@@ -32,7 +32,7 @@ struct encoder {
 
 encoder_t *new_encoder(
   const char * /* fname */, 
-  opts_t * /* opt */);
+  encopts_t * /* opt */);
 
 void free_encoder(
   encoder_t * /* enc */);

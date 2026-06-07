@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 
 #include "decoder.h"
+#include "opts.h"
 
 static volatile sig_atomic_t running = 1;
 
@@ -35,7 +36,12 @@ int main(int argc, char **argv) {
   const char *fname = argv[1];
   const char *fmt   = argc >= 3 ? argv[2] : "rgb8";
 
-  decoder_t *dec = new_decoder(fname, fmt);
+  decopts_t *dopts = malloc(sizeof(decopts_t));
+  memset(dopts, 0, sizeof(decopts_t));
+  dopts->fmt = strdup(fmt);
+
+  decoder_t *dec = new_decoder(fname, dopts);
+  free_decopts(dopts);
   if (!dec) {
     fprintf(stderr, "could not open decoder for '%s'\n", fname);
     return 1;
@@ -79,7 +85,11 @@ int main(int argc, char **argv) {
     uint8_t *buf = dec->next(dec);
     if (!buf) {
       free_decoder(dec);
-      dec = new_decoder(fname, fmt);
+      dopts = malloc(sizeof(decopts_t));
+      memset(dopts, 0, sizeof(decopts_t));
+      dopts->fmt = strdup(fmt);
+      dec = new_decoder(fname, dopts);
+      free_decopts(dopts);
       if (!dec) {
         fprintf(stderr, "could not reopen decoder\n");
         break;

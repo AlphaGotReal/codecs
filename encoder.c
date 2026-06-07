@@ -136,7 +136,7 @@ static bool eclose(encoder_t *this) {
 
 encoder_t *new_encoder(
     const char *fname,
-    opts_t *opt) {
+    encopts_t *opt) {
 
   encoder_t *enc = (encoder_t *) malloc(sizeof(encoder_t));
   if (enc == NULL) {
