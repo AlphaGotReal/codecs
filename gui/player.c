@@ -13,6 +13,19 @@ static void handle_sigint(int sig) {
   running = 0;
 }
 
+static Uint32 lookup_fmt(const char *fmt, int W, int *pitch) {
+  if (strcmp(fmt, "yuv420p") == 0) {
+    *pitch = W;
+    return SDL_PIXELFORMAT_IYUV;
+  }
+  if (strcmp(fmt, "bgr8") == 0) {
+    *pitch = W * 3;
+    return SDL_PIXELFORMAT_BGR24;
+  }
+  *pitch = W * 3;
+  return SDL_PIXELFORMAT_RGB24;
+}
+
 int main(int argc, char **argv) {
   if (argc < 2 || argc > 3) {
     fprintf(stderr, "Usage: %s <video_file> [pixel_format]\n", argv[0]);
@@ -32,7 +45,8 @@ int main(int argc, char **argv) {
   int H    = (int)dec->height;
   double fps = dec->fps;
   int delay = fps > 0.0 ? (int) (1000.0 / fps) : 33;
-  int pitch = W * 3;
+  int pitch;
+  Uint32 sdl_fmt = lookup_fmt(fmt, W, &pitch);
 
   signal(SIGINT, handle_sigint);
 
@@ -45,7 +59,7 @@ int main(int argc, char **argv) {
   SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
   SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
 
-  SDL_Texture *tex = SDL_CreateTexture(ren, SDL_PIXELFORMAT_RGB24,
+  SDL_Texture *tex = SDL_CreateTexture(ren, sdl_fmt,
       SDL_TEXTUREACCESS_STREAMING, W, H);
 
   while (running) {
