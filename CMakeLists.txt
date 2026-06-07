@@ -25,4 +25,5 @@ add_library(encoder STATIC encoder.c)
 target_include_directories(encoder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(encoder PUBLIC PkgConfig::FFMPEG hash opts pixfmt)
 
+add_subdirectory(gui)
 add_subdirectory(test)
