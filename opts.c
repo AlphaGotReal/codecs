@@ -226,8 +226,12 @@ decopts_t *new_decopts(const char *fname) {
           state = 2;
         } else if (state == 2) {
           if (strcmp(key, "fmt") == 0) {
-            d->fmt = strdup(val);
-            if (d->fmt == NULL) { free(key); goto dec_fail; }
+            if (val[0] == '\0') {
+              d->fmt = NULL;
+            } else {
+              d->fmt = strdup(val);
+              if (d->fmt == NULL) { free(key); goto dec_fail; }
+            }
           } else if (strcmp(key, "threads") == 0) {
             d->threads = (int) strtol(val, NULL, 10);
           } else if (strcmp(key, "thread_type") == 0) {

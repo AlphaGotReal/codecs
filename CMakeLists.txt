@@ -36,3 +36,4 @@ target_link_libraries(encoder PUBLIC PkgConfig::FFMPEG hash opts pixfmt)
 
 add_subdirectory(gui)
 add_subdirectory(test)
+add_subdirectory(perf)
