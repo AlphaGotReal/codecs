@@ -30,7 +30,9 @@ make
 
 | Target | Description | Usage |
 |--------|-------------|-------|
-| `player` | GUI video player (SDL2) | `./gui/player <video>` |
+| `player` | GUI video player (SDL2) | `./gui/player <video> [dec_config.yaml]` |
+| `dspeed` | Decode speed benchmark | `./perf/dspeed <video> [dec_config.yaml]` |
+| `roundtrip` | Encode-decode roundtrip test | `./test/roundtrip <input> <output> <enc_config.yaml>` |
 | `random` | Synthetic encode benchmark | `./test/random <output>` |
 | `h26x` | H.264/H.265 transcode test | `./test/h26x <input> <output>` |
 | `vpx` | VP8/VP9 transcode test | `./test/vpx <input> <output>` |
