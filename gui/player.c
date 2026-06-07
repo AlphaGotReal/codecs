@@ -1,9 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <SDL2/SDL.h>
 
 #include "decoder.h"
+
+static volatile sig_atomic_t running = 1;
+
+static void handle_sigint(int sig) {
+  (void)sig;
+  running = 0;
+}
 
 int main(int argc, char **argv) {
   if (argc != 2) {
@@ -22,31 +30,22 @@ int main(int argc, char **argv) {
   int W    = (int)dec->width;
   int H    = (int)dec->height;
   double fps = dec->fps;
-  int delay = fps > 0.0 ? (int)(1000.0 / fps) : 33;
+  int delay = fps > 0.0 ? (int) (1000.0 / fps) : 33;
   int pitch = W * 3;
 
-  int win_w = W, win_h = H;
-  int max_w = 1280, max_h = 720;
-  if (win_w > max_w || win_h > max_h) {
-    double scale = (double)max_w / win_w;
-    if ((double)max_h / win_h < scale) scale = (double)max_h / win_h;
-    win_w = (int)(win_w * scale);
-    win_h = (int)(win_h * scale);
-  }
+  signal(SIGINT, handle_sigint);
 
   SDL_Init(SDL_INIT_VIDEO);
 
   SDL_Window *win = SDL_CreateWindow("player",
       SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-      win_w, win_h, SDL_WINDOW_RESIZABLE);
+      W, H, SDL_WINDOW_RESIZABLE);
 
   SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
   SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
 
   SDL_Texture *tex = SDL_CreateTexture(ren, SDL_PIXELFORMAT_RGB24,
       SDL_TEXTUREACCESS_STREAMING, W, H);
-
-  int running = 1;
 
   while (running) {
     uint32_t tick = SDL_GetTicks();
@@ -60,6 +59,7 @@ int main(int argc, char **argv) {
           running = 0;
       }
     }
+    if (!running) break;
 
     uint8_t *buf = dec->next(dec);
     if (!buf) {
