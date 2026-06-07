@@ -8,11 +8,11 @@
 #include "decoder.h"
 #include "pixfmt.h"
 
-static bool decoder_end(decoder_t *it) {
+static bool dend(decoder_t *it) {
   return it->_exhausted;
 }
 
-static bool decoder_close(decoder_t *it) {
+static bool dclose(decoder_t *it) {
   if (it == NULL) return false;
   sws_freeContext(it->sws_ctx);
   avcodec_free_context(&it->dec_ctx);
@@ -22,7 +22,7 @@ static bool decoder_close(decoder_t *it) {
   return true;
 }
 
-static uint8_t *decoder_next(decoder_t *it) {
+static uint8_t *dnext(decoder_t *it) {
   if (it->_exhausted) return NULL;
 
   int ret;
@@ -243,9 +243,9 @@ decoder_t *new_decoder(const char *fname, const char *fmt) {
   it->frame    = frame;
   it->pkt      = pkt;
 
-  it->end   = decoder_end;
-  it->close = decoder_close;
-  it->next  = decoder_next;
+  it->end   = dend;
+  it->close = dclose;
+  it->next  = dnext;
 
   return it;
 }
