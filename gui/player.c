@@ -14,14 +14,15 @@ static void handle_sigint(int sig) {
 }
 
 int main(int argc, char **argv) {
-  if (argc != 2) {
-    fprintf(stderr, "Usage: %s <video_file>\n", argv[0]);
+  if (argc < 2 || argc > 3) {
+    fprintf(stderr, "Usage: %s <video_file> [pixel_format]\n", argv[0]);
     return 1;
   }
 
   const char *fname = argv[1];
+  const char *fmt   = argc >= 3 ? argv[2] : "rgb8";
 
-  decoder_t *dec = new_decoder(fname, "rgb8");
+  decoder_t *dec = new_decoder(fname, fmt);
   if (!dec) {
     fprintf(stderr, "could not open decoder for '%s'\n", fname);
     return 1;
@@ -64,7 +65,7 @@ int main(int argc, char **argv) {
     uint8_t *buf = dec->next(dec);
     if (!buf) {
       free_decoder(dec);
-      dec = new_decoder(fname, "rgb8");
+      dec = new_decoder(fname, fmt);
       if (!dec) {
         fprintf(stderr, "could not reopen decoder\n");
         break;
