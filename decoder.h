@@ -6,6 +6,8 @@
 #include <libavformat/avformat.h>
 #include <libavcodec/avcodec.h>
 
+struct SwsContext;
+
 typedef struct decoder decoder_t;
 
 struct decoder {
@@ -20,6 +22,9 @@ struct decoder {
   size_t   _vidx;
   bool     _exhausted;
 
+  enum AVPixelFormat target_fmt;
+  struct SwsContext  *sws_ctx;
+
   AVFormatContext   *fmt_ctx;
   AVStream          *stream;
   AVCodecParameters *cparams;
@@ -33,7 +38,7 @@ struct decoder {
   uint8_t *(*next)(decoder_t *);
 };
 
-decoder_t *new_decoder(const char *fname);
+decoder_t *new_decoder(const char *fname, const char *fmt);
 
 void free_decoder(decoder_t *it);
 

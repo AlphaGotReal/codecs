@@ -14,3 +14,4 @@ add_ff(random random.c)
 add_executable(test_hash test_hash.c)
 target_link_libraries(test_hash hash)
 target_include_directories(test_hash PRIVATE ${CMAKE_SOURCE_DIR})
+

@@ -6,10 +6,9 @@
 #include <libavutil/imgutils.h>
 #include <libavutil/dict.h>
 
-#define TABLE_SIZE 1024
-
 #include "common.h"
 #include "encoder.h"
+#include "pixfmt.h"
 
 static bool eopen(encoder_t *this) {
   avformat_alloc_output_context2(&(this->fmt_ctx), NULL, NULL, this->fname);
@@ -29,7 +28,8 @@ static bool eopen(encoder_t *this) {
   this->codec_ctx->time_base = (AVRational){1, this->opt->fps};
   this->codec_ctx->framerate = (AVRational){this->opt->fps, 1};
 
-  void *fmt = non_static_call(this->qfmt, find, this->opt->fmt);
+  init_pixfmt();
+  void *fmt = non_static_call(pixfmt, find, this->opt->fmt);
   if (fmt == NULL) {
     fprintf(stderr, "pixel format not found '%s'\n", this->opt->fmt);
     fprintf(stderr, "defaulting to YUV420P\n");
@@ -147,11 +147,6 @@ encoder_t *new_encoder(
   enc->fname = fname;
   enc->opt   = opt;
 
-  enc->qfmt = new_umap(TABLE_SIZE, djb2);
-
-  non_static_call(enc->qfmt, push, new_kv("rgb8", (void *) AV_PIX_FMT_RGB24));
-  non_static_call(enc->qfmt, push, new_kv("yuv420p", (void *) AV_PIX_FMT_YUV420P));
-
   enc->fmt_ctx   = NULL;
   enc->codec_ctx = NULL;
   enc->frame     = NULL;
@@ -169,6 +164,5 @@ encoder_t *new_encoder(
 void free_encoder(encoder_t *enc) {
   if (enc == NULL) return;
   if (enc->close) enc->close(enc);
-  free_umap(enc->qfmt);
   free(enc);
 }

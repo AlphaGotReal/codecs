@@ -4,7 +4,7 @@ project(codecs C)
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(YAML  REQUIRED IMPORTED_TARGET yaml-0.1)
-pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavformat libavcodec libavutil)
+pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavformat libavcodec libavutil libswscale)
 
 add_library(hash STATIC hash.c)
 target_include_directories(hash PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

@@ -7,7 +7,6 @@
 #include <libavformat/avformat.h>
 #include <libavcodec/avcodec.h>
 
-#include "hash.h"
 #include "opts.h"
 
 typedef struct encoder encoder_t;
@@ -15,8 +14,6 @@ typedef struct encoder encoder_t;
 struct encoder {
   const char *fname;
   opts_t *opt;
-
-  umap_t *qfmt; // string -> fmt
 
   /* private members */
   AVFormatContext *fmt_ctx;

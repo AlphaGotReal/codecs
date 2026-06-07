@@ -3,8 +3,10 @@
 #include <string.h>
 
 #include <libavutil/imgutils.h>
+#include <libswscale/swscale.h>
 
 #include "decoder.h"
+#include "pixfmt.h"
 
 static bool decoder_end(decoder_t *it) {
   return it->_exhausted;
@@ -12,6 +14,7 @@ static bool decoder_end(decoder_t *it) {
 
 static bool decoder_close(decoder_t *it) {
   if (it == NULL) return false;
+  sws_freeContext(it->sws_ctx);
   avcodec_free_context(&it->dec_ctx);
   avformat_close_input(&it->fmt_ctx);
   av_packet_free(&it->pkt);
@@ -20,11 +23,14 @@ static bool decoder_close(decoder_t *it) {
 }
 
 static uint8_t *decoder_next(decoder_t *it) {
+  if (it->_exhausted) return NULL;
+
   int ret;
 
   ret = avcodec_receive_frame(it->dec_ctx, it->frame);
   if (ret == 0)
     goto have_frame;
+  if (ret == AVERROR_EOF) goto eof;
 
   while (av_read_frame(it->fmt_ctx, it->pkt) >= 0) {
     if (it->pkt->stream_index == (int)it->_vidx) {
@@ -34,6 +40,7 @@ static uint8_t *decoder_next(decoder_t *it) {
       ret = avcodec_receive_frame(it->dec_ctx, it->frame);
       if (ret == 0)
         goto have_frame;
+      if (ret == AVERROR_EOF) goto eof;
     } else {
       av_packet_unref(it->pkt);
     }
@@ -47,22 +54,61 @@ static uint8_t *decoder_next(decoder_t *it) {
   it->_exhausted = true;
   return NULL;
 
+eof: 
+  it->_exhausted = true;
+  return NULL;
+
 have_frame:
   {
-    int buf_size = av_image_get_buffer_size(
-        it->dec_ctx->pix_fmt, it->width, it->height, 1);
+    enum AVPixelFormat src_fmt = it->dec_ctx->pix_fmt;
+    enum AVPixelFormat dst_fmt = it->target_fmt;
+
+    if (dst_fmt != AV_PIX_FMT_NONE && dst_fmt != src_fmt) {
+      AVFrame *tmp = av_frame_alloc();
+      if (tmp == NULL) return NULL;
+
+      tmp->format = dst_fmt;
+      tmp->width  = it->width;
+      tmp->height = it->height;
+      av_frame_get_buffer(tmp, 0);
+
+      sws_scale(it->sws_ctx,
+          (const uint8_t *const *)it->frame->data, it->frame->linesize,
+          0, it->height,
+          tmp->data, tmp->linesize);
+
+      int buf_size = av_image_get_buffer_size(dst_fmt, it->width, it->height, 1);
+      if (buf_size < 0) { av_frame_free(&tmp); av_frame_unref(it->frame); return NULL; }
+
+      uint8_t *buf = (uint8_t *) malloc(buf_size);
+      if (buf == NULL) { av_frame_free(&tmp); av_frame_unref(it->frame); return NULL; }
+
+      av_image_copy_to_buffer(buf, buf_size,
+          (const uint8_t **)tmp->data, (const int *)tmp->linesize,
+          dst_fmt, it->width, it->height, 1);
+
+      av_frame_free(&tmp);
+      av_frame_unref(it->frame);
+      return buf;
+    }
+
+    int buf_size = av_image_get_buffer_size(src_fmt, it->width, it->height, 1);
+    if (buf_size < 0) return NULL;
+
     uint8_t *buf = (uint8_t *) malloc(buf_size);
     if (buf == NULL) return NULL;
 
     av_image_copy_to_buffer(buf, buf_size,
         (const uint8_t **) it->frame->data,
         (const int *) it->frame->linesize,
-        it->dec_ctx->pix_fmt, it->width, it->height, 1);
+        src_fmt, it->width, it->height, 1);
+
+    av_frame_unref(it->frame);
     return buf;
   }
 }
 
-decoder_t *new_decoder(const char *fname) {
+decoder_t *new_decoder(const char *fname, const char *fmt) {
   decoder_t *it = (decoder_t *)malloc(sizeof(decoder_t));
   if (it == NULL) return NULL;
   memset(it, 0, sizeof(decoder_t));
@@ -150,9 +196,15 @@ decoder_t *new_decoder(const char *fname) {
   if (fps <= 0.0 || fps > 1000.0) fps = 30.0;
 
   int64_t dur = stream->duration;
-  if (dur <= 0) dur = fmt_ctx->duration;
-  uint64_t nframes = (uint64_t) (av_q2d(stream->time_base) * dur * fps);
-  if (nframes <= 0) nframes = 300;
+  uint64_t nframes = 0;
+  if (dur > 0) {
+    nframes = (uint64_t)(av_q2d(stream->time_base) * dur * fps);
+  } else {
+    dur = fmt_ctx->duration;
+    if (dur > 0) {
+      nframes = (uint64_t)(((double)dur / AV_TIME_BASE) * fps);
+    }
+  }
 
   it->fps      = fps;
   it->duration = dur;
@@ -160,6 +212,29 @@ decoder_t *new_decoder(const char *fname) {
   it->width    = cparams->width;
   it->height   = cparams->height;
   it->_vidx    = (size_t) vidx;
+  it->target_fmt = AV_PIX_FMT_NONE;
+
+  if (fmt != NULL) {
+    init_pixfmt();
+    void *f = non_static_call(pixfmt, find, fmt);
+    if (f != NULL) {
+      it->target_fmt = (enum AVPixelFormat)(intptr_t)f;
+      if (it->target_fmt != dec_ctx->pix_fmt) {
+        it->sws_ctx = sws_getContext(it->width, it->height, dec_ctx->pix_fmt,
+                                      it->width, it->height, it->target_fmt,
+                                      SWS_BILINEAR, NULL, NULL, NULL);
+        if (it->sws_ctx == NULL) {
+          fprintf(stderr, "could not create sws context\n");
+          avcodec_free_context(&dec_ctx);
+          avformat_close_input(&fmt_ctx);
+          av_frame_free(&frame);
+          av_packet_free(&pkt);
+          free(it->fname); free(it);
+          return NULL;
+        }
+      }
+    }
+  }
 
   it->fmt_ctx  = fmt_ctx;
   it->stream   = stream;
