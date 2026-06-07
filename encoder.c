@@ -154,7 +154,7 @@ encoder_t *new_encoder(
   enc->stream    = NULL;
 
   enc->open    = eopen; 
-  enc->encode = eencode; 
+  enc->encode  = eencode; 
   enc->flush   = eflush; 
   enc->close   = eclose;
 
