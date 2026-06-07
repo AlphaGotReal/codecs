@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 project(codecs C)
 
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
+
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(YAML  REQUIRED IMPORTED_TARGET yaml-0.1)

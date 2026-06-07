@@ -30,13 +30,13 @@ static bool eopen(encoder_t *this) {
 
   init_pixfmt();
   void *fmt = non_static_call(pixfmt, find, this->opt->fmt);
-  if (fmt == NULL) {
+  if (fmt != NULL) {
+    this->codec_ctx->pix_fmt = *(enum AVPixelFormat *)fmt;
+  } else {
     fprintf(stderr, "pixel format not found '%s'\n", this->opt->fmt);
     fprintf(stderr, "defaulting to YUV420P\n");
-    fmt = (void *) AV_PIX_FMT_YUV420P;
+    this->codec_ctx->pix_fmt = AV_PIX_FMT_YUV420P;
   }
-
-  this->codec_ctx->pix_fmt = (enum AVPixelFormat)(intptr_t) fmt;
 
   AVDictionary *opts = NULL;
   for (size_t t = 0; t < this->opt->n; ++t) {

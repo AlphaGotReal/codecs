@@ -15,3 +15,7 @@ add_executable(test_hash test_hash.c)
 target_link_libraries(test_hash hash)
 target_include_directories(test_hash PRIVATE ${CMAKE_SOURCE_DIR})
 
+add_executable(roundtrip roundtrip.c)
+target_link_libraries(roundtrip encoder decoder)
+target_include_directories(roundtrip PRIVATE ${CMAKE_SOURCE_DIR})
+

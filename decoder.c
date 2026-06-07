@@ -218,7 +218,7 @@ decoder_t *new_decoder(const char *fname, const char *fmt) {
     init_pixfmt();
     void *f = pixfmt->find(pixfmt, fmt);
     if (f != NULL) {
-      it->target_fmt = (enum AVPixelFormat)(intptr_t)f;
+      it->target_fmt = *(enum AVPixelFormat *)f;
       if (it->target_fmt != dec_ctx->pix_fmt) {
         it->sws_ctx = sws_getContext(it->width, it->height, dec_ctx->pix_fmt,
                                       it->width, it->height, it->target_fmt,
