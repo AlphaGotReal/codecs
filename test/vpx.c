@@ -131,7 +131,7 @@ int main(int argc, char **argv) {
   AVFrame *frame = NULL;
   AVPacket *pkt = NULL;
 
-  AVOutputFormat *fmt = av_guess_format(NULL, out_filename, NULL);
+  const AVOutputFormat *fmt = av_guess_format(NULL, out_filename, NULL);
   if (strcmp(codec_name, "libvpx") == 0 || strcmp(codec_name, "libvpx-vp9") == 0) {
     if (fmt && strcmp(fmt->name, "mp4") == 0) {
       fmt = av_guess_format("matroska", NULL, NULL);
@@ -166,7 +166,7 @@ int main(int argc, char **argv) {
   out_stream->codecpar->codec_tag = 0;
 
   avio_open(&ofmt_ctx->pb, out_filename, AVIO_FLAG_WRITE);
-  avformat_write_header(ofmt_ctx, NULL);
+  (void)avformat_write_header(ofmt_ctx, NULL);
 
   frame = av_frame_alloc();
   frame->format = codec_ctx->pix_fmt;

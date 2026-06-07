@@ -152,7 +152,7 @@ int main(int argc, char **argv) {
   avcodec_parameters_from_context(out_stream->codecpar, codec_ctx);
 
   avio_open(&ofmt_ctx->pb, out_filename, AVIO_FLAG_WRITE);
-  avformat_write_header(ofmt_ctx, NULL);
+  (void)avformat_write_header(ofmt_ctx, NULL);
 
   frame = av_frame_alloc();
   frame->format = codec_ctx->pix_fmt;
