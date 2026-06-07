@@ -13,9 +13,16 @@ sudo pacman -S libyaml ffmpeg sdl2
 ```
 
 Build:
+
 ```bash
 mkdir build && cd build
-cmake ..
+
+# Release mode (default, no AddressSanitizer)
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make
+
+# Debug mode (with AddressSanitizer)
+cmake .. -DCMAKE_BUILD_TYPE=Debug
 make
 ```
 
