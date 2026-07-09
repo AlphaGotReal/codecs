@@ -34,7 +34,7 @@ long get_file_size(const char *filename) {
 
 #define NCPU "8"
 #define CRF "31"
-#define PRESET "good"
+#define PRESET "slow"
 
 int main(int argc, char **argv) {
 

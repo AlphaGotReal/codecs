@@ -31,8 +31,8 @@ long get_file_size(const char *filename) {
 #define cnow (clock() * 1e-6)
 #define rnow get_wall_time()
 
-#define PRESET "8"
-#define CRF "35"
+#define PRESET "1"
+#define CRF "10"
 
 int main(int argc, char **argv) {
 
