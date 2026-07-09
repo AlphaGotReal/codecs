@@ -268,14 +268,14 @@ int main(int argc, char **argv) {
   if (avio_open(&ofmt_ctx->pb, out_filename, AVIO_FLAG_WRITE) < 0) {
     fprintf(stderr, "Fatal: Could not open output file '%s'\n", out_filename);
     fail_cleanup(ifmt_ctx, ofmt_ctx, dec_ctx, enc_ctx, device_ctx, frames_ctx,
-                 NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+                 NULL, NULL, NULL, NULL, NULL, NULL);
     return 1;
   }
 
   if (avformat_write_header(ofmt_ctx, NULL) < 0) {
     fprintf(stderr, "Fatal: Could not write output header\n");
     fail_cleanup(ifmt_ctx, ofmt_ctx, dec_ctx, enc_ctx, device_ctx, frames_ctx,
-                 NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+                 NULL, NULL, NULL, NULL, NULL, NULL);
     return 1;
   }
 
@@ -284,6 +284,7 @@ int main(int argc, char **argv) {
   AVPacket *pkt = av_packet_alloc();
   AVPacket *in_pkt = av_packet_alloc();
   AVFrame *dec_frame = av_frame_alloc();
+  int ret = 0;
 
   if (!sw_frame || !hw_frame || !pkt || !in_pkt || !dec_frame) {
     fprintf(stderr, "Fatal: Could not allocate working frames/packets\n");
@@ -332,7 +333,7 @@ int main(int argc, char **argv) {
       continue;
     }
 
-    int ret = avcodec_send_packet(dec_ctx, in_pkt);
+    ret = avcodec_send_packet(dec_ctx, in_pkt);
     av_packet_unref(in_pkt);
     if (ret < 0) {
       fprintf(stderr, "Error sending packet to decoder\n");
