@@ -1,6 +1,6 @@
 #! /usr/bin/bash
 
-apt install intel-media-va-driver-non-free vainfo intel-gpu-tools
+apt install intel-media-va-driver-non-free vainfo intel-gpu-tools libvpl-dev libmfx-gen-dev
 usermod -aG render $USER
 usermod -aG video $USER
 
