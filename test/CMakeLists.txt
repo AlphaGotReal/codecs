@@ -11,6 +11,7 @@ add_ff(av1 av1.c)
 add_ff(h264_nvenv h264_nvenc.c)
 add_ff(av1_nvenv av1_nvenc.c)
 add_ff(qsv qsv.c)
+add_ff(qsv_vaapi qsv_vaapi.c)
 add_ff(random random.c)
 
 add_executable(test_hash test_hash.c)
@@ -20,5 +21,4 @@ target_include_directories(test_hash PRIVATE ${CMAKE_SOURCE_DIR})
 add_executable(roundtrip roundtrip.c)
 target_link_libraries(roundtrip encoder decoder)
 target_include_directories(roundtrip PRIVATE ${CMAKE_SOURCE_DIR})
-
 
