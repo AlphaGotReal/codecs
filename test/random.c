@@ -33,6 +33,7 @@ long get_file_size(const char *filename) {
 
 #define PRESET "medium"
 #define CRF "23"
+#define GOP "10"
 #define WIDTH  640
 #define HEIGHT 480
 #define DEFAULT_FPS 30
@@ -44,7 +45,7 @@ int main(int argc, char **argv) {
   double cs = cnow;
 
   if (argc < 2) {
-    printf("Usage: ./random {output_file} [width] [height] [fps] [frames] [codec_name] [preset] [crf]\n");
+    printf("Usage: ./random {output_file} [width] [height] [fps] [frames] [codec_name] [preset] [crf] [GOP]\n");
     return 1;
   }
 
@@ -89,6 +90,11 @@ int main(int argc, char **argv) {
     crf = argv[8];
   }
 
+  const char *gop = GOP;
+  if (argc >= 10) {
+    gop = argv[9];
+  } 
+
   printf("Output: %s (%dx%d, %.2f fps, %ld frames, codec=%s)\n", out_filename, W, H, FPS, N, codec_name);
 
   AVFormatContext *ofmt_ctx = NULL;
@@ -117,6 +123,7 @@ int main(int argc, char **argv) {
   AVDictionary *opts = NULL;
   av_dict_set(&opts, "preset", preset, 0);
   av_dict_set(&opts, "crf", crf, 0);
+  av_dict_set(&opts, "g", gop, 0);
 
   if (avcodec_open2(codec_ctx, enc_codec, &opts) < 0) {
     fprintf(stderr, "Error: Could not open encoder\n");
