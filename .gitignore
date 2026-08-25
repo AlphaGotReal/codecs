@@ -1,3 +1,4 @@
 vids/*.mp4
 build/
 AGENTS.md
+**/__pycache__
