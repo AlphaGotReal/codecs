@@ -1,0 +1,49 @@
+number of frames: 100
+
+seek test with GOP=250
+video FPS: 30.03003003003003
+video GOP: 249.24924924924926
+mean random access time: 1.1519821071624756
+std random access time : 0.6223645480321237
+
+seek test with GOP=100
+video FPS: 30.03003003003003
+video GOP: 99.09909909909909
+mean random access time: 0.5470130920410157
+std random access time : 0.277209538446027
+
+seek test with GOP=60
+video FPS: 30.03003003003003
+video GOP: 59.05906906906907
+mean random access time: 0.32235581398010255
+std random access time : 0.14973120466839002
+
+seek test with GOP=50
+video FPS: 30.03003003003003
+video GOP: 49.04903903903904
+mean random access time: 0.2761442279815674
+std random access time : 0.13197515382596903
+
+seek test with GOP=30
+video FPS: 30.03003003003003
+video GOP: 29.02903903903904
+mean random access time: 0.18240424394607543
+std random access time : 0.0773204643239718
+
+seek test with GOP=20
+video FPS: 30.03003003003003
+video GOP: 19.01900900900901
+mean random access time: 0.13402238845825196
+std random access time : 0.05555102873709527
+
+seek test with GOP=10
+video FPS: 30.03003003003003
+video GOP: 9.00900900900901
+mean random access time: 0.08208064794540405
+std random access time : 0.025638598313281812
+
+seek test with GOP=3
+video FPS: 30.03003003003003
+video GOP: 2.002012012012012
+mean random access time: 0.049137046337127684
+std random access time : 0.00644375572327801
