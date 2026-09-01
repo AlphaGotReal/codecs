@@ -46,3 +46,14 @@ def get_gop(video_path):
 
     dt = float(lines[1]) - float(lines[0])
     return get_fps(video_path) * dt
+
+def profile(F):
+    global TIMES
+    def wrap(*args, **kwargs):
+        global TIMES
+        t0 = time.time()
+        ret = F(*args, **kwargs)
+        dt = time.time() - t0
+        TIMES.append(dt)
+        return ret
+    return wrap

@@ -10,7 +10,7 @@ import argparse
 import av
 import numpy as np
 
-from common import get_gop, get_fps
+from common import get_gop, get_fps, profile
 
 TIMES = []
 
