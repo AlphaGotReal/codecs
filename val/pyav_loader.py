@@ -14,17 +14,6 @@ from common import get_gop, get_fps, profile
 
 TIMES = []
 
-def profile(F):
-    global TIMES
-    def wrap(*args, **kwargs):
-        global TIMES
-        t0 = time.time()
-        ret = F(*args, **kwargs)
-        dt = time.time() - t0
-        TIMES.append(dt)
-        return ret
-    return wrap
-
 class PyavLoader:
     def __init__(self, video_f: str):
         self.video_f = video_f
