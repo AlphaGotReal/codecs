@@ -47,6 +47,9 @@ def main(args):
 
     l = PyavLoader(args.video)
 
+    cc = l.s.codec_context
+    print(f"decoder: {cc.name} | is_hwaccel: {cc.is_hwaccel} | hwaccel: {cc.hwaccel}")
+
     print(f"video FPS: {get_fps(args.video)}")
     print(f"video GOP: {get_gop(args.video)}")
 

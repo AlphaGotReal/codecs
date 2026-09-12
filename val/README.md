@@ -4,9 +4,12 @@ this is code to validate different libraries when it comes to training utilities
 - pyav
 - decord
 
-## Random access vs GOP (N=100)
+## Random access vs GOP — PyAV, CPU software decode (N=100)
 
 Measured with `seek_test.sh` / `pyav_loader.py` (N=100 random seeks per video).
+Decoder is PyAV software `h264` (CPU, `is_hwaccel=False`, `hwaccel=None`) —
+`pyav_loader.py` uses plain `av.open()` with no hwaccel/NVDEC setup, and prints
+`decoder: ... | is_hwaccel: ... | hwaccel: ...` at runtime to confirm.
 Results from `out.txt` (converted to ms); GOP is the nominal value from the
 filename; file size measured from `vids/test_decode_*.mp4` (MB = bytes / 1e6).
 
