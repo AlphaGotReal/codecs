@@ -31,7 +31,7 @@ long get_file_size(const char *filename) {
 #define cnow (clock() * 1e-6)
 #define rnow get_wall_time()
 
-#define PRESET "p4"
+#define PRESET "p1"
 #define CQ "23"
 
 int main(int argc, char **argv) {
@@ -117,7 +117,13 @@ int main(int argc, char **argv) {
 
   AVCodecContext *dec_ctx = avcodec_alloc_context3(dec_codec);
   avcodec_parameters_to_context(dec_ctx, in_codecpar);
-  avcodec_open2(dec_ctx, dec_codec, NULL);
+  int ret = avcodec_open2(dec_ctx, dec_codec, NULL);
+  if (ret < 0) {
+    char err[1024];
+    av_strerror(ret, err, sizeof(err));
+    fprintf(stderr, "avcodec_open2 returned %d : %s\n", ret, err);
+    return 1;
+  }
 
   AVFormatContext *ofmt_ctx = NULL;
   AVCodecContext *codec_ctx = NULL;
