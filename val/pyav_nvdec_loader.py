@@ -8,6 +8,7 @@ import tqdm
 import random
 import argparse
 import av
+from av.codec.hwaccel import HWAccel
 import numpy as np
 
 from common import get_gop, get_fps
@@ -28,7 +29,13 @@ def profile(F):
 class PyavLoader:
     def __init__(self, video_f: str):
         self.video_f = video_f
-        self.c = av.open(video_f)
+
+        hwaccel = HWAccel(
+            device_type="cuda",
+            allow_software_fallback=False,
+        )
+
+        self.c = av.open(video_f, hwaccel=hwaccel)
         self.s = self.c.streams.video[0] # assume only video exists
         self.tb = self.s.time_base
         self.dur = float(self.s.duration * self.tb) \
