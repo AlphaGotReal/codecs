@@ -1,6 +1,130 @@
-number of frames: 10000
+number of frames: 1000
  
 seek test with GOP=250
 decoder: h264 | is_hwaccel: False | hwaccel: None
 video FPS: 30.03003003003003
 video GOP: 250
+mean random access time: 1.1764478447437285
+std random access time : 0.6447677821628176
+-rw-r--r-- 1 straw straw 187766674 Aug 25 16:56 ../vids/test_decode_250.mp4
+ 
+seek test with GOP=100
+decoder: h264 | is_hwaccel: False | hwaccel: None
+video FPS: 30.03003003003003
+video GOP: 100
+mean random access time: 0.4910554549694061
+std random access time : 0.26086628402716194
+-rw-r--r-- 1 straw straw 187973340 Aug 25 16:56 ../vids/test_decode_100.mp4
+ 
+seek test with GOP=60
+decoder: h264 | is_hwaccel: False | hwaccel: None
+video FPS: 30.03003003003003
+video GOP: 60
+mean random access time: 0.31715584301948546
+std random access time : 0.16491373902766082
+-rw-r--r-- 1 straw straw 188179860 Aug 25 16:56 ../vids/test_decode_60.mp4
+ 
+seek test with GOP=50
+decoder: h264 | is_hwaccel: False | hwaccel: None
+video FPS: 30.03003003003003
+video GOP: 50
+mean random access time: 0.26581114149093626
+std random access time : 0.13497997511458254
+-rw-r--r-- 1 straw straw 188317911 Aug 25 16:56 ../vids/test_decode_50.mp4
+ 
+seek test with GOP=30
+decoder: h264 | is_hwaccel: False | hwaccel: None
+video FPS: 30.03003003003003
+video GOP: 30
+mean random access time: 0.1722047290802002
+std random access time : 0.07985049825185178
+-rw-r--r-- 1 straw straw 188800197 Aug 25 16:56 ../vids/test_decode_30.mp4
+ 
+seek test with GOP=20
+decoder: h264 | is_hwaccel: False | hwaccel: None
+video FPS: 30.03003003003003
+video GOP: 20
+mean random access time: 0.12413447833061218
+std random access time : 0.05229497427877916
+-rw-r--r-- 1 straw straw 189411043 Aug 25 16:56 ../vids/test_decode_20.mp4
+ 
+seek test with GOP=10
+decoder: h264 | is_hwaccel: False | hwaccel: None
+video FPS: 30.03003003003003
+video GOP: 10
+mean random access time: 0.07769134426116943
+std random access time : 0.02386077940636276
+-rw-r--r-- 1 straw straw 191408276 Aug 25 16:57 ../vids/test_decode_10.mp4
+ 
+seek test with GOP=3
+decoder: h264 | is_hwaccel: False | hwaccel: None
+video FPS: 30.03003003003003
+video GOP: 3
+mean random access time: 0.048361459016799925
+std random access time : 0.006010580787810261
+-rw-r--r-- 1 straw straw 204724990 Aug 25 16:57 ../vids/test_decode_3.mp4
+ 
+seek test with GOP=250
+decoder: h264 | is_hwaccel: True | hwaccel: <av.codec.hwaccel.HWAccel object at 0x7f169d90aff0>
+video FPS: 30.03003003003003
+video GOP: 250
+mean random access time: 0.09031139683723449
+std random access time : 0.05232679486639209
+-rw-r--r-- 1 straw straw 187766674 Aug 25 16:56 ../vids/test_decode_250.mp4
+ 
+seek test with GOP=100
+decoder: h264 | is_hwaccel: True | hwaccel: <av.codec.hwaccel.HWAccel object at 0x7f0f56f0eff0>
+video FPS: 30.03003003003003
+video GOP: 100
+mean random access time: 0.03669543600082398
+std random access time : 0.020783899664694728
+-rw-r--r-- 1 straw straw 187973340 Aug 25 16:56 ../vids/test_decode_100.mp4
+ 
+seek test with GOP=60
+decoder: h264 | is_hwaccel: True | hwaccel: <av.codec.hwaccel.HWAccel object at 0x7f87c3306ff0>
+video FPS: 30.03003003003003
+video GOP: 60
+mean random access time: 0.02448555254936218
+std random access time : 0.012169223417102124
+-rw-r--r-- 1 straw straw 188179860 Aug 25 16:56 ../vids/test_decode_60.mp4
+ 
+seek test with GOP=50
+decoder: h264 | is_hwaccel: True | hwaccel: <av.codec.hwaccel.HWAccel object at 0x7f0df8516ff0>
+video FPS: 30.03003003003003
+video GOP: 50
+mean random access time: 0.019762462377548216
+std random access time : 0.010304480915482812
+-rw-r--r-- 1 straw straw 188317911 Aug 25 16:56 ../vids/test_decode_50.mp4
+ 
+seek test with GOP=30
+decoder: h264 | is_hwaccel: True | hwaccel: <av.codec.hwaccel.HWAccel object at 0x7f9448106ff0>
+video FPS: 30.03003003003003
+video GOP: 30
+mean random access time: 0.013009918928146362
+std random access time : 0.006035466920790907
+-rw-r--r-- 1 straw straw 188800197 Aug 25 16:56 ../vids/test_decode_30.mp4
+ 
+seek test with GOP=20
+decoder: h264 | is_hwaccel: True | hwaccel: <av.codec.hwaccel.HWAccel object at 0x7fa228f1aff0>
+video FPS: 30.03003003003003
+video GOP: 20
+mean random access time: 0.009524944305419922
+std random access time : 0.003939814075049711
+-rw-r--r-- 1 straw straw 189411043 Aug 25 16:56 ../vids/test_decode_20.mp4
+ 
+seek test with GOP=10
+decoder: h264 | is_hwaccel: True | hwaccel: <av.codec.hwaccel.HWAccel object at 0x7fdcd670eff0>
+video FPS: 30.03003003003003
+video GOP: 10
+mean random access time: 0.00585290789604187
+std random access time : 0.0020395343549367783
+-rw-r--r-- 1 straw straw 191408276 Aug 25 16:57 ../vids/test_decode_10.mp4
+ 
+seek test with GOP=3
+decoder: h264 | is_hwaccel: True | hwaccel: <av.codec.hwaccel.HWAccel object at 0x7fe124116ff0>
+video FPS: 30.03003003003003
+video GOP: 3
+mean random access time: 0.0035205862522125243
+std random access time : 0.0009756354722583936
+-rw-r--r-- 1 straw straw 204724990 Aug 25 16:57 ../vids/test_decode_3.mp4
+ 
