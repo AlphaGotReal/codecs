@@ -24,3 +24,8 @@ file size measured from `vids/test_decode_*.mp4` (MB = bytes / 1e6).
 | `test_decode_20.mp4` | 20 | 189.4 MB (189411043 B) | 124.1 ± 52.3 | 9.5 ± 3.9 |
 | `test_decode_10.mp4` | 10 | 191.4 MB (191408276 B) | 77.7 ± 23.9 | 5.9 ± 2.0 |
 | `test_decode_3.mp4` | 3 | 204.7 MB (204724990 B) | 48.4 ± 6.0 | 3.5 ± 1.0 |
+
+![GOP size vs mean random-access decode time](gop_vs_decode.png)
+
+*GOP size vs mean random-access decode time (ms, log scale, ± std error bars).
+Generated with `plot_gop.py`: `uv run --with matplotlib python plot_gop.py`.*
