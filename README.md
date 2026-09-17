@@ -18,7 +18,7 @@ Build:
 mkdir build && cd build
 
 # Release mode (default, no AddressSanitizer)
-cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake .. -DCMAKE_C_FLAGS="-I/usr/include/ffmpeg" -DCMAKE_BUILD_TYPE=Release
 make
 
 # Debug mode (with AddressSanitizer)
