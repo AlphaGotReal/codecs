@@ -11,6 +11,8 @@ find_package(PkgConfig REQUIRED)
 pkg_check_modules(YAML  REQUIRED IMPORTED_TARGET yaml-0.1)
 pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavformat libavcodec libavutil libswscale)
 
+pkg_check_modules(SDL2 QUIET sdl2)
+
 add_library(hash STATIC hash.c)
 target_include_directories(hash PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -34,6 +36,8 @@ add_library(encoder STATIC encoder.c)
 target_include_directories(encoder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(encoder PUBLIC PkgConfig::FFMPEG hash opts pixfmt)
 
-add_subdirectory(gui)
+if(SDL2_FOUND)
+  add_subdirectory(gui)
+endif()
 add_subdirectory(test)
 add_subdirectory(perf)
