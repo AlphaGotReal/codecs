@@ -26,7 +26,7 @@ target_link_libraries(pixfmt PUBLIC hash PkgConfig::FFMPEG)
 
 add_library(flagmap STATIC flagmap.c)
 target_include_directories(flagmap PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(flagmap PUBLIC hash)
+target_link_libraries(flagmap PUBLIC hash PkgConfig::FFMPEG)
 
 add_library(decoder STATIC decoder.c)
 target_include_directories(decoder PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
