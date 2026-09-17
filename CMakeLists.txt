@@ -22,7 +22,7 @@ target_link_libraries(opts PUBLIC PkgConfig::YAML)
 
 add_library(pixfmt STATIC pixfmt.c)
 target_include_directories(pixfmt PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(pixfmt PUBLIC hash)
+target_link_libraries(pixfmt PUBLIC hash PkgConfig::FFMPEG)
 
 add_library(flagmap STATIC flagmap.c)
 target_include_directories(flagmap PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
