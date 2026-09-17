@@ -1,14 +1,11 @@
-#! /usr/bin/bash
-
-dnf install -y \
-    intel-media-driver \
-    libva-utils \
-    intel-gpu-tools \
-    oneVPL-devel
-
-usermod -aG render "$USER"
-usermod -aG video "$USER"
+#!/usr/bin/bash
+set -e
 
 dnf upgrade -y
+dnf install -y \
+    libva-utils \
+    intel-gpu-tools \
+    libva-intel-media-driver
 
-vainfo --display drm --device /dev/dri/renderD128
+ls -l /dev/dri/
+LIBVA_DRIVER_NAME=iHD vainfo --display drm --device /dev/dri/renderD129
